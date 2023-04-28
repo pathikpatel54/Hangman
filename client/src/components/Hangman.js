@@ -131,7 +131,7 @@ const Hangman = () => {
   useEffect(() => {
     if (
       checkWin(correctLetters, wrongLetters, selectedWord) === "win" &&
-      selectedWord != ""
+      selectedWord !== ""
     ) {
       setWon(true);
       open();
@@ -141,7 +141,7 @@ const Hangman = () => {
       setPlayable(false);
     } else if (
       checkWin(correctLetters, wrongLetters, selectedWord) === "lose" &&
-      selectedWord != ""
+      selectedWord !== ""
     ) {
       setWon(false);
       open();

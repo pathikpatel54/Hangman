@@ -3,6 +3,7 @@ import {
   Button,
   Center,
   CopyButton,
+  Group,
   Input,
   Loader,
   Modal,
@@ -13,7 +14,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import axios from "axios";
 import { useState } from "react";
-import { IconCopy, IconCheck } from "@tabler/icons-react";
+import { IconCopy } from "@tabler/icons-react";
 
 const Generate = () => {
   const [word, setWord] = useState("");
@@ -23,7 +24,7 @@ const Generate = () => {
   const [uri, setURI] = useState("");
 
   const onGenerateClick = async () => {
-    if (word == "") {
+    if (word === "") {
       setError("Word is required");
     } else {
       setLoading(true);
@@ -75,26 +76,28 @@ const Generate = () => {
         </Button>
       </Center>
       <Modal
+        size={600}
         opened={opened}
         onClose={onModalClose}
-        withCloseButton={false}
-        centered
-        title={<Text>Link Generated</Text>}
+        withCloseButton={true}
+        title={<Text fw={700}>Link Generated</Text>}
       >
-        {uri}
-        <CopyButton value={uri} timeout={2000}>
-          {({ copied, copy }) => (
-            <Tooltip
-              label={copied ? "Copied" : "Copy"}
-              withArrow
-              position="right"
-            >
-              <ActionIcon color={copied ? "teal" : "gray"} onClick={copy}>
-                {copied ? <IconCopy size="1rem" /> : <IconCopy size="1rem" />}
-              </ActionIcon>
-            </Tooltip>
-          )}
-        </CopyButton>
+        <Group noWrap mt="md">
+          {uri}
+          <CopyButton value={uri} timeout={2000}>
+            {({ copied, copy }) => (
+              <Tooltip
+                label={copied ? "Copied" : "Copy"}
+                withArrow
+                position="right"
+              >
+                <ActionIcon color={copied ? "teal" : "gray"} onClick={copy}>
+                  {copied ? <IconCopy size="1rem" /> : <IconCopy size="1rem" />}
+                </ActionIcon>
+              </Tooltip>
+            )}
+          </CopyButton>
+        </Group>
       </Modal>
     </div>
   );
