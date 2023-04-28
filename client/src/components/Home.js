@@ -169,6 +169,14 @@ export default function HeroText() {
           </Text>{" "}
           {name}!
         </Title>
+        {params.id ? (
+          <Text size="lg" color="dimmed" className={classes.description}>
+            You have been challanged by your friend! Enter your name and click
+            Play
+          </Text>
+        ) : (
+          <></>
+        )}
         <Space h="xl" />
         <Container p={0} size={500}>
           <TextInput
