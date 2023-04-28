@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import Word from "./Word";
 import { notifications } from "@mantine/notifications";
 import { useDisclosure } from "@mantine/hooks";
+import { useNavigate } from "react-router-dom";
 
 const words = ["application", "programming", "interface", "wizard"];
 let selectedWord = words[Math.floor(Math.random() * words.length)];
@@ -22,6 +23,38 @@ const Hangman = () => {
   const [correctLetters, setCorrectLetters] = useState([]);
   const [opened, { open, close }] = useDisclosure(false);
   const [won, setWon] = useState(false);
+  const [userName, setUserName] = useState("");
+  const navigate = useNavigate();
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  const handleKeydown = (event) => {
+    const { key, keyCode } = event;
+    console.log(key, keyCode);
+    if (playable && keyCode >= 65 && keyCode <= 90) {
+      const letter = key.toLowerCase();
+      if (selectedWord.includes(letter)) {
+        if (!correctLetters.includes(letter)) {
+          setCorrectLetters((currentLetters) => [...currentLetters, letter]);
+        } else {
+          notifications.clean();
+          notifications.show({
+            message: "You have already entered this letter!",
+            withBorder: true,
+          });
+        }
+      } else {
+        if (!wrongLetters.includes(letter)) {
+          setWrongLetters((currentLetters) => [...currentLetters, letter]);
+        } else {
+          notifications.clean();
+          notifications.show({
+            message: "You have already entered this letter!",
+            withBorder: true,
+          });
+        }
+      }
+    }
+  };
 
   const checkWin = (correct, wrong, word) => {
     let status = "win";
@@ -53,6 +86,16 @@ const Hangman = () => {
   };
 
   useEffect(() => {
+    const name = localStorage.getItem("name");
+    if (name == null) {
+      navigate("/");
+    } else {
+      setUserName(name);
+    }
+    resetGame();
+  }, []);
+
+  useEffect(() => {
     if (checkWin(correctLetters, wrongLetters, selectedWord) === "win") {
       setWon(true);
       open();
@@ -63,41 +106,10 @@ const Hangman = () => {
       open();
     }
 
-    const handleKeydown = (event) => {
-      const { key, keyCode } = event;
-      if (playable && keyCode >= 65 && keyCode <= 90) {
-        const letter = key.toLowerCase();
-        if (selectedWord.includes(letter)) {
-          if (!correctLetters.includes(letter)) {
-            setCorrectLetters((currentLetters) => [...currentLetters, letter]);
-          } else {
-            notifications.clean();
-            notifications.show({
-              message: "You have already entered this letter!",
-              withBorder: true,
-            });
-          }
-        } else {
-          if (!wrongLetters.includes(letter)) {
-            setWrongLetters((currentLetters) => [...currentLetters, letter]);
-          } else {
-            notifications.clean();
-            notifications.show({
-              message: "You have already entered this letter!",
-              withBorder: true,
-            });
-          }
-        }
-      }
-    };
     window.addEventListener("keydown", handleKeydown);
 
     return () => window.removeEventListener("keydown", handleKeydown);
   }, [correctLetters, wrongLetters, playable]);
-
-  useEffect(() => {
-    resetGame();
-  }, []);
 
   return (
     <Grid>
@@ -105,14 +117,29 @@ const Hangman = () => {
         <Figure wrongLetters={wrongLetters} />
       </Grid.Col>
 
-      <Divider span="auto" size="md" orientation="vertical" />
+      <Divider span="auto" size="sm" orientation="vertical" />
       <Grid.Col span={6}>
         <Modal
+          size="sm"
           opened={opened}
           onClose={resetGame}
-          title={won ? "Congratilations 😃" : "Unfortunately you lost 😌"}
+          title={
+            won ? (
+              <Text fw={700} fz="lg">
+                Congratilations You have won 😃
+              </Text>
+            ) : (
+              <Text fw={700} fz="lg">
+                You have lost this game 😌
+              </Text>
+            )
+          }
           withCloseButton={false}
         >
+          <Space h="xl" />
+
+          <Text>Correct word was: {selectedWord}</Text>
+          <Space h="xl" />
           <Center mt={10}>
             <Button onClick={resetGame}>Play Again</Button>
           </Center>

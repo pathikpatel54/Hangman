@@ -8,7 +8,7 @@ import {
   TextInput,
   Space,
 } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const useStyles1 = createStyles((theme) => ({
@@ -129,8 +129,15 @@ export default function HeroText() {
   const [error, setError] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const name = localStorage.getItem("name");
+    if (name != null) {
+      setName(name);
+    }
+  }, []);
+
   const onPlayClick = () => {
-    if (name == "") {
+    if (name.trim() === "") {
       setError(true);
     } else {
       localStorage.setItem("name", name);
@@ -139,7 +146,7 @@ export default function HeroText() {
   };
 
   const onGenerateClick = () => {
-    if (name == "") {
+    if (name.trim() === "") {
       setError(true);
     } else {
       localStorage.setItem("name", name);
@@ -155,12 +162,17 @@ export default function HeroText() {
           <Text component="span" className={classes.highlight} inherit>
             The Hangman
           </Text>{" "}
+          {name}!
         </Title>
         <Space h="xl" />
         <Container p={0} size={500}>
           <TextInput
-            label="Please enter your name"
-            placeholder="Your Name"
+            label={
+              name === ""
+                ? "Please enter your name"
+                : "Would you like to change your username?"
+            }
+            placeholder={name === "" ? "Your Name" : "Enter new name"}
             classNames={classes1}
             onChange={(e) => {
               setError(false);

@@ -1,7 +1,7 @@
 .figure-container {
     fill: transparent;
     stroke: #495057;
-    stroke-width: 4px;
+    stroke-width: 3px;
     stroke-linecap: round;
 }
 
@@ -43,7 +43,7 @@
   }
   
   .letter {
-    border-bottom: 3px solid #2980b9;
+    border-bottom: 3px solid #495057;
     display: inline-flex;
     font-size: 30px;
     align-items: center;
