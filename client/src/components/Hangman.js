@@ -1,8 +1,17 @@
-import { Center, Grid } from "@mantine/core";
+import {
+  Button,
+  Center,
+  Divider,
+  Grid,
+  Modal,
+  Space,
+  Text,
+} from "@mantine/core";
 import Figure from "./Figure";
 import { useEffect, useState } from "react";
 import Word from "./Word";
 import { notifications } from "@mantine/notifications";
+import { useDisclosure } from "@mantine/hooks";
 
 const words = ["application", "programming", "interface", "wizard"];
 let selectedWord = words[Math.floor(Math.random() * words.length)];
@@ -11,6 +20,8 @@ const Hangman = () => {
   const [playable, setPlayable] = useState(true);
   const [wrongLetters, setWrongLetters] = useState([]);
   const [correctLetters, setCorrectLetters] = useState([]);
+  const [opened, { open, close }] = useDisclosure(false);
+  const [won, setWon] = useState(false);
 
   const checkWin = (correct, wrong, word) => {
     let status = "win";
@@ -28,13 +39,28 @@ const Hangman = () => {
     return status;
   };
 
+  const resetGame = () => {
+    close();
+    setPlayable(true);
+
+    // Empty Arrays
+    setCorrectLetters([]);
+    setWrongLetters([]);
+
+    const random = Math.floor(Math.random() * words.length);
+    selectedWord = words[random];
+    setWon(false);
+  };
+
   useEffect(() => {
     if (checkWin(correctLetters, wrongLetters, selectedWord) === "win") {
-      console.log("Won");
+      setWon(true);
+      open();
     } else if (
       checkWin(correctLetters, wrongLetters, selectedWord) === "lose"
     ) {
-      console.log("Lose");
+      setWon(false);
+      open();
     }
 
     const handleKeydown = (event) => {
@@ -69,15 +95,40 @@ const Hangman = () => {
     return () => window.removeEventListener("keydown", handleKeydown);
   }, [correctLetters, wrongLetters, playable]);
 
+  useEffect(() => {
+    resetGame();
+  }, []);
+
   return (
     <Grid>
-      <Grid.Col span={6}>
+      <Grid.Col span={5}>
         <Figure wrongLetters={wrongLetters} />
       </Grid.Col>
 
+      <Divider span="auto" size="md" orientation="vertical" />
       <Grid.Col span={6}>
+        <Modal
+          opened={opened}
+          onClose={resetGame}
+          title={won ? "Congratilations 😃" : "Unfortunately you lost 😌"}
+          withCloseButton={false}
+        >
+          <Center mt={10}>
+            <Button onClick={resetGame}>Play Again</Button>
+          </Center>
+        </Modal>
         <Center>
           <Word selectedWord={selectedWord} correctLetters={correctLetters} />
+        </Center>
+        <Space h="xl" />
+        <Space h="xl" />
+        <Space h="xl" />
+        <Space h="xl" />
+        <Center>
+          <Text size={"lg"}>Wrong Letters: </Text>
+        </Center>
+        <Center>
+          <Text size={"lg"}>{wrongLetters}</Text>
         </Center>
       </Grid.Col>
     </Grid>

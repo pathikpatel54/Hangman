@@ -8,6 +8,7 @@ import {
   Paper,
   Transition,
   Avatar,
+  Text,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Link, useLocation } from "react-router-dom";
@@ -110,7 +111,7 @@ export default function HeaderResponsive() {
 
   useEffect(() => {
     setActive(path.pathname);
-  }, []);
+  }, [path]);
 
   const items = links.map((link) => (
     <Link
@@ -131,15 +132,16 @@ export default function HeaderResponsive() {
   return (
     <Header height={HEADER_HEIGHT} mb={80} className={classes.root}>
       <Container className={classes.header} size={"xl"}>
-        <Link
-          to="/"
-          style={{ textDecoration: "none" }}
+        <Text
+          fw={700}
           onClick={() => {
             setActive("/");
           }}
+          component={Link}
+          to="/"
         >
-          HANGMAN
-        </Link>
+          The Hangman
+        </Text>
 
         <Group spacing={5} className={classes.links}>
           {items}
