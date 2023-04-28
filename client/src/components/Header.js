@@ -99,8 +99,8 @@ const useStyles = createStyles((theme) => ({
 const links = [
   { link: "/", label: "Home" },
   { link: "/hangman", label: "Play" },
-  { link: "/generate", label: "Generate New Game" },
-  { link: "/scoreboard", label: "Scoreboard" },
+  { link: "/generate", label: "Generate Custom Game" },
+  { link: "/leaderboard", label: "Leaderboard" },
 ];
 
 export default function HeaderResponsive() {
@@ -130,7 +130,7 @@ export default function HeaderResponsive() {
   ));
 
   return (
-    <Header height={HEADER_HEIGHT} mb={80} className={classes.root}>
+    <Header height={HEADER_HEIGHT} mb={60} className={classes.root}>
       <Container className={classes.header} size={"xl"}>
         <Text
           fw={700}

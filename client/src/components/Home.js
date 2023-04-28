@@ -9,7 +9,7 @@ import {
   Space,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const useStyles1 = createStyles((theme) => ({
   root: {
@@ -128,6 +128,7 @@ export default function HeroText() {
   const [name, setName] = useState("");
   const [error, setError] = useState(false);
   const navigate = useNavigate();
+  const params = useParams();
 
   useEffect(() => {
     const name = localStorage.getItem("name");
@@ -141,7 +142,11 @@ export default function HeroText() {
       setError(true);
     } else {
       localStorage.setItem("name", name);
-      navigate("/hangman");
+      if (params.id) {
+        navigate(`/hangman/${params.id}`);
+      } else {
+        navigate("/hangman");
+      }
     }
   };
 
